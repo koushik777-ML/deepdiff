@@ -34,6 +34,11 @@ class TestHelper:
         output = short_repr(item)
         assert output == "{'Eat more':...}"
 
+    @pytest.mark.parametrize('max_length', [0, 1, 2, 3])
+    def test_short_repr_with_tiny_max_length(self, max_length):
+        output = short_repr('burritos', max_length=max_length)
+        assert output == repr('burritos')[:max_length]
+
     @pytest.mark.parametrize("t1, t2, significant_digits, number_format_notation, expected_result",
                              [
                                  (10, 10.0, 5, "f", True),
@@ -290,6 +295,11 @@ class TestHelper:
     def test_add_root_to_paths(self, test_num, value, expected):
         result = add_root_to_paths(value)
         assert expected == result, f"test_add_root_to_paths #{test_num} failed."
+
+    def test_add_root_to_paths_when_empty_path(self):
+        with pytest.raises(ValueError) as excinfo:
+            add_root_to_paths([''])
+        assert 'Path can not be an empty string.' == str(excinfo.value)
 
     @pytest.mark.parametrize('test_num, value, expected', [
         (1, '1.2.3', 1002003),
