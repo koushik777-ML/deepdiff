@@ -223,6 +223,8 @@ def short_repr(item: Any, max_length: int = 15) -> str:
     """Short representation of item if it is too long"""
     item = repr(item)
     if len(item) > max_length:
+        if max_length < 4:
+            return item[:max_length]
         item = '{}...{}'.format(item[:max_length - 3], item[-1])
     return item
 
@@ -367,6 +369,8 @@ def add_root_to_paths(paths: Optional[Iterable[str]]) -> Optional[SetOrdered]:
         return
     result = SetOrdered()
     for path in paths:
+        if not path:
+            raise ValueError('Path can not be an empty string.')
         if path.startswith('root'):
             result.add(path)
         else:
